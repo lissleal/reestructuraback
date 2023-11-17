@@ -2,7 +2,7 @@ import cartModel from "../models/cart.model.js"
 import productModel from "../models/product.model.js"
 
 
-class CartDao extends cartModel {
+class CartService extends cartModel {
     constructor() {
         super()
     }
@@ -178,4 +178,4 @@ class CartDao extends cartModel {
 
 
 }
-export default CartDao
+export default CartService

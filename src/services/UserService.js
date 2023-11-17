@@ -1,6 +1,6 @@
-import { UserModel } from "../models/user.model.js";
+import { UserModel } from "../dao/mongo/user.model.js";
 
-class UserDao extends UserModel {
+class userService extends UserModel {
     constructor() {
         super();
     }
@@ -100,4 +100,4 @@ class UserDao extends UserModel {
 
 }
 
-export default UserDao;
+export default userService;

@@ -2,25 +2,25 @@ import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
 import { createHash, isValidPassword } from "../utils.js";
-import UserDao from "../dao/user.dao.js";
-import { UserModel } from "../models/user.model.js";
+import userService from "../services/UserService.js";
+
 
 const LocalStrategy = local.Strategy;
-const userManager = new UserDao();
+const service = new userService();
 const initializePassport = () => {
     passport.use("register", new LocalStrategy(
         { passReqToCallback: true, usernameField: "email" },
         async (req, username, password, done) => {
             const { name, surname, email, role } = req.body;
             try {
-                let user = await userManager.findEmail({ email: username });
+                let user = await service.findEmail({ email: username });
                 if (user) {
                     return done(null, false, { message: "User already exists" });
                 }
                 const hashedPassword = await createHash(password);
 
                 const newUser = { name, surname, email, password: hashedPassword, role };
-                let result = await userManager.addUser(newUser);
+                let result = await service.addUser(newUser);
                 return done(null, result);
             } catch (error) {
                 return done("Error getting the user", error);
@@ -32,7 +32,7 @@ const initializePassport = () => {
     })
     passport.deserializeUser(async (id, done) => {
         try {
-            const user = await userManager.getUserById(id);
+            const user = await service.getUserById(id);
             return done(null, user);
         } catch (error) {
             return done(error);
@@ -41,7 +41,7 @@ const initializePassport = () => {
 
     passport.use("login", new LocalStrategy({ usernameField: "email" }, async (username, password, done) => {
         try {
-            const user = await userManager.findEmail({ email: username });
+            const user = await service.findEmail({ email: username });
             if (!user) {
                 return done(null, false, { message: "User not found" });
             }
@@ -67,7 +67,7 @@ const initializePassport = () => {
             let name = profile.displayName;
 
             if (email && email.length > 0) {
-                let user = await userManager.findEmail({ email: email });
+                let user = await service.findEmail({ email: email });
                 console.log(`User en passport.use /github: ${user}`);
 
                 if (!user) {
@@ -80,7 +80,7 @@ const initializePassport = () => {
                     }
                     let newUserJson = JSON.stringify(newUser);
 
-                    let result = await userManager.addUser(newUser);
+                    let result = await service.addUser(newUser);
                     return done(null, result);
                 } else {
                     return done(null, user);

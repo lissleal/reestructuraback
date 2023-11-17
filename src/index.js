@@ -4,7 +4,6 @@ import * as path from "path"
 import __dirname from "./utils.js";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import FileStore from "session-file-store";
 
 //Passport
 import passport from "passport";
@@ -73,9 +72,9 @@ app.use("/", express.static(__dirname + "/public"))
 app.use("/", ViewsRouter)
 
 //Rutas para CRUD:
+app.use("/api/users", UserRouter)
 app.use("/api/carts", cartsRouter)
 app.use("/api/products", productsRouter)
-app.use("/api/users", UserRouter)
 
 
 

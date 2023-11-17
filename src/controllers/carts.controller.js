@@ -1,11 +1,11 @@
 import Router from "express";
 import cartModel from "../dao/models/cart.model.js";
-import CartDao from "../controlers/CartDao.js";
+import CartDao from "./CartDao.js";
 
-const router = Router();
+const Cartrouter = Router();
 const carts = new CartDao();
 
-router.get("/", async (req, res) => {
+Cartrouter.get("/", async (req, res) => {
     try {
         let carts = await cartModel.find();
         res.send({ result: "success", payload: carts })
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 })
 
 //Obtiene carrito con sus productos
-router.get("/:cid", async (req, res) => {
+Cartrouter.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
 
     try {
@@ -31,7 +31,7 @@ router.get("/:cid", async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+Cartrouter.post("/", async (req, res) => {
     let { name, description, products } = req.body;
 
     if (!name || !description || !products) {
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
 })
 
 //Actualiza carrito
-router.put("/:cid", async (req, res) => {
+Cartrouter.put("/:cid", async (req, res) => {
     let { cid } = req.params;
     let cartToReplace = req.body;
     if (!cartToReplace.name || !cartToReplace.description || !cartToReplace.products) {
@@ -57,14 +57,14 @@ router.put("/:cid", async (req, res) => {
 })
 
 //Elimina carrito
-router.delete("/:cid", async (req, res) => {
+Cartrouter.delete("/:cid", async (req, res) => {
     let { cid } = req.params;
     let result = await cartModel.deleteOne({ _id: cid });
     res.send({ result: "success", payload: result })
 })
 
 //Productos dentro del carrito
-router.get("/:cid/products/:pid", async (req, res) => {
+Cartrouter.get("/:cid/products/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
 
@@ -78,7 +78,7 @@ router.get("/:cid/products/:pid", async (req, res) => {
 })
 
 //Agrega producto al carrito
-router.post("/:cid/products/:pid", async (req, res) => {
+Cartrouter.post("/:cid/products/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
 
@@ -92,7 +92,7 @@ router.post("/:cid/products/:pid", async (req, res) => {
 })
 
 //Actualiza cantidad de productos 
-router.put("/:cid/products/:pid", async (req, res) => {
+Cartrouter.put("/:cid/products/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
     const newQuantity = req.body.quantity;
@@ -107,7 +107,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
 })
 
 //Elimina del carrito el producto seleccionado
-router.delete("/:cid/products/:pid", async (req, res) => {
+Cartrouter.delete("/:cid/products/:pid", async (req, res) => {
     let cartId = req.params.cid;
     let productId = req.params.pid;
 
@@ -121,4 +121,4 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 
 })
 
-export default router;
+export default Cartrouter;

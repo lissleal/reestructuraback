@@ -1,9 +1,9 @@
 import { Router } from "express";
 import productModel from "../models/product.model.js";
-import ProductManager from "../dao/product.dao.js";
+import ProductDao from "../dao/product.dao.js";
 
 const router = Router();
-const products = new ProductManager();
+const products = new ProductDao();
 
 router.get("/", async (req, res) => {
     let sortOrder = req.query.sortOrder || "asc";

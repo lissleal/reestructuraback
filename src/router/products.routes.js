@@ -1,12 +1,10 @@
 import express from "express";
-import ProductManager from "../dao/product.dao.js";
-import cartModel from "../models/cart.model.js";
-import UserManager from "../dao/user.dao.js";
+import cartModel from "../dao/mongo/cart.model.js";
+import userService from "../services/UserService.js";
 
 const productsRouter = express.Router()
-const product = new ProductManager()
+const product = new userService()
 const cart = new cartModel()
-const user = new UserManager()
 
 productsRouter.get("/products", async (req, res) => {
     if (!req.session.email) {

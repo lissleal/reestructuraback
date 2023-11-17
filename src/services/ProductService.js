@@ -1,6 +1,6 @@
 import productModel from "../models/product.model.js";
 
-class ProductManager extends productModel {
+class ProductService extends productModel {
     constructor() {
         super();
     }
@@ -122,13 +122,13 @@ class ProductManager extends productModel {
             if (availability != "") {
                 filter.availability = availability;
             }
-            const query = ProductManager.find(filter)
+            const query = ProductDao.find(filter)
                 .skip(startIndex)
                 .limit(limit)
                 .sort(sortOptions);;
             const products = await query.exec();
 
-            const totalProducts = await ProductManager.countDocuments(filter);
+            const totalProducts = await ProductDao.countDocuments(filter);
             const totalPages = Math.ceil(totalProducts / limit);
             const hasPrevPage = startIndex > 0;
             const hasNextPage = endIndex < totalProducts;
@@ -153,5 +153,4 @@ class ProductManager extends productModel {
     }
 }
 
-export default ProductManager
-
+export default ProductService
