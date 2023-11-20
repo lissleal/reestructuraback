@@ -11,6 +11,7 @@ const initializePassport = () => {
     passport.use("register", new LocalStrategy(
         { passReqToCallback: true, usernameField: "email" },
         async (req, username, password, done) => {
+            console.log("Registering user:", req.body);
             const { name, surname, email, role } = req.body;
             try {
                 let user = await service.findEmail({ email: username });
@@ -23,6 +24,7 @@ const initializePassport = () => {
                 let result = await service.addUser(newUser);
                 return done(null, result);
             } catch (error) {
+                console.log("Error registering user:", error);
                 return done("Error getting the user", error);
             }
         }))

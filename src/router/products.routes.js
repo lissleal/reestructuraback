@@ -1,10 +1,17 @@
 import express from "express";
-import cartModel from "../dao/mongo/cart.model.js";
-import userService from "../services/UserService.js";
+import { createProduct, deleteProduct, getProductById, getProductByLimit, getProductByPage, getProductByQuery, getProductMaster, updateProduct } from "../controllers/products.controller.js";
 
 const productsRouter = express.Router()
-const product = new userService()
-const cart = new cartModel()
+
+
+productsRouter.get("/", getProductMaster)
+productsRouter.get("/:pid", getProductById)
+productsRouter.post("/", createProduct)
+productsRouter.put("/:pid", updateProduct)
+productsRouter.delete("/:pid", deleteProduct)
+productsRouter.get("/limit/:limit", getProductByLimit)
+productsRouter.get("/page/:page", getProductByPage)
+productsRouter.get("/query/:query", getProductByQuery)
 
 productsRouter.get("/products", async (req, res) => {
     if (!req.session.email) {
@@ -40,5 +47,4 @@ productsRouter.get("/products/:id", async (req, res) => {
         product: productDetail
     })
 })
-
 export default productsRouter;

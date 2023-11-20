@@ -1,11 +1,4 @@
-import Router from "express";
-import cartModel from "../dao/models/cart.model.js";
-import CartDao from "./CartDao.js";
-
-const Cartrouter = Router();
-const carts = new CartDao();
-
-Cartrouter.get("/", async (req, res) => {
+export async function getCarts(req, res) {
     try {
         let carts = await cartModel.find();
         res.send({ result: "success", payload: carts })
@@ -13,10 +6,10 @@ Cartrouter.get("/", async (req, res) => {
     catch (error) {
         console.log("Cannot get carts with mongoose: ", error);
     }
-})
+}
 
 //Obtiene carrito con sus productos
-Cartrouter.get("/:cid", async (req, res) => {
+export async function getCart(req, res) {
     const cartId = req.params.cid;
 
     try {
@@ -29,9 +22,9 @@ Cartrouter.get("/:cid", async (req, res) => {
         console.error('Error al obtener el carrito:', error);
         res.status(500).json({ error: 'Error al obtener el carrito' });
     }
-})
+}
 
-Cartrouter.post("/", async (req, res) => {
+export async function createCart(req, res) {
     let { name, description, products } = req.body;
 
     if (!name || !description || !products) {
@@ -43,10 +36,11 @@ Cartrouter.post("/", async (req, res) => {
         products
     })
     res.send({ result: "success", payload: result })
-})
+}
 
 //Actualiza carrito
-Cartrouter.put("/:cid", async (req, res) => {
+
+export async function updateCart(req, res) {
     let { cid } = req.params;
     let cartToReplace = req.body;
     if (!cartToReplace.name || !cartToReplace.description || !cartToReplace.products) {
@@ -54,17 +48,17 @@ Cartrouter.put("/:cid", async (req, res) => {
     }
     let result = await cartModel.updateOne({ _id: cid }, cartToReplace);
     res.send({ result: "success", payload: result })
-})
+}
 
 //Elimina carrito
-Cartrouter.delete("/:cid", async (req, res) => {
+export async function deleteCart(req, res) {
     let { cid } = req.params;
     let result = await cartModel.deleteOne({ _id: cid });
     res.send({ result: "success", payload: result })
-})
+}
 
 //Productos dentro del carrito
-Cartrouter.get("/:cid/products/:pid", async (req, res) => {
+export async function getProductsInCart(req, res) {
     const cartId = req.params.cid;
     const productId = req.params.pid;
 
@@ -75,10 +69,10 @@ Cartrouter.get("/:cid/products/:pid", async (req, res) => {
         console.error('Error al obtener el producto:', error);
         res.status(500).json({ error: 'Error al obtener el producto' });
     }
-})
+}
 
 //Agrega producto al carrito
-Cartrouter.post("/:cid/products/:pid", async (req, res) => {
+export async function addProductInCart(req, res) {
     const cartId = req.params.cid;
     const productId = req.params.pid;
 
@@ -89,10 +83,10 @@ Cartrouter.post("/:cid/products/:pid", async (req, res) => {
         console.error('Error al agregar el producto:', error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
-})
+}
 
 //Actualiza cantidad de productos 
-Cartrouter.put("/:cid/products/:pid", async (req, res) => {
+export async function updateQuantityOfProduct(req, res) {
     const cartId = req.params.cid;
     const productId = req.params.pid;
     const newQuantity = req.body.quantity;
@@ -104,10 +98,10 @@ Cartrouter.put("/:cid/products/:pid", async (req, res) => {
         console.error('Error al actualizar el producto:', error);
         res.status(500).json({ error: 'Error al actualizar el producto' });
     }
-})
+}
 
 //Elimina del carrito el producto seleccionado
-Cartrouter.delete("/:cid/products/:pid", async (req, res) => {
+export async function deleteProductInCart(req, res) {
     let cartId = req.params.cid;
     let productId = req.params.pid;
 
@@ -119,6 +113,5 @@ Cartrouter.delete("/:cid/products/:pid", async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar el producto' });
     }
 
-})
+}
 
-export default Cartrouter;

@@ -3,15 +3,16 @@ import { engine } from "express-handlebars";
 import * as path from "path"
 import __dirname from "./utils.js";
 import session from "express-session";
-import MongoStore from "connect-mongo";
+import sessionConfig from "./config/session.config.js";
+import connectMongo from "./config/mongo.config.js";
+import dotenv from 'dotenv';
 
 //Passport
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 
-
-//Mongoose
-import mongoose from "mongoose";
+// Variables de entorno
+dotenv.config();
 
 //Rutas
 import ViewsRouter from "./router/views.routes.js";
@@ -27,29 +28,11 @@ app.listen(PORT, () => console.log(`Escuchando servidor en puerto ${PORT}`))
 
 
 //Conexión a MongoDB:
-mongoose.set('strictQuery', false); //Para que no de error deprecated al buscar por query
-mongoose.connect("mongodb+srv://lissett777:7b9DvuamjK0qhB8l@pruebacoder.uzvytlv.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp", (error) => {
-    if (error) {
-        console.log("Error connecting to database: ", error);
-        process.exit();
-    }
-    console.log("Connected to database");
-})
+
+connectMongo()
 
 //Configuración de sesión:
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: "mongodb+srv://lissett777:7b9DvuamjK0qhB8l@pruebacoder.uzvytlv.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp",
-        // mongoOptions: {
-        //     useNewUrlParser: false,
-        //     useUnifiedTopology: false
-        // },
-        ttl: 600
-    }),
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-}))
+app.use(session(sessionConfig))
 
 //Configuración de passport:
 initializePassport()
