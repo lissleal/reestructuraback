@@ -29,7 +29,7 @@ UserRouter.get("/github", passport.authenticate("github", { scope: ["user: email
     console.log("Redirecting to GitHub for authentication...")
 })
 
-UserRouter.get("/github/callback", passport.authenticate("github", { failureRedirect: "/login" }), handleGitHubCallback);
+UserRouter.get("/githubcallback", passport.authenticate("github", { failureRedirect: "/login" }), handleGitHubCallback);
 
 UserRouter.get("/profile", async (req, res) => {
     try {

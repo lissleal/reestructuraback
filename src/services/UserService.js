@@ -1,13 +1,13 @@
-import { UserModel } from "../dao/mongo/user.model.js";
+import userModel from "../dao/mongo/user.model.js";
 
-class userService extends UserModel {
+class UserService extends userModel {
     constructor() {
         super();
     }
 
     addUser = async (user) => {
         try {
-            const newUser = await UserModel.create(user);
+            const newUser = await userModel.create(user);
             return newUser;
         } catch (error) {
             console.log("Error al agregar usuario: ");
@@ -17,7 +17,7 @@ class userService extends UserModel {
 
     getUsers = async () => {
         try {
-            const users = await UserModel.find();
+            const users = await userModel.find();
             return users;
         } catch (error) {
             console.log("Error al obtener usuarios: ");
@@ -27,7 +27,7 @@ class userService extends UserModel {
 
     getUserById = async (id) => {
         try {
-            const user = await UserModel.findById(id);
+            const user = await userModel.findById(id);
             return user;
         } catch (error) {
             console.log("Error al obtener usuario por id: ");
@@ -37,7 +37,7 @@ class userService extends UserModel {
 
     getUserByEmail = async (email) => {
         try {
-            const user = await UserModel.findOne({ email: email });
+            const user = await userModel.findOne({ email: email });
             return user;
         } catch (error) {
             console.log("Error al obtener usuario por email: ");
@@ -46,7 +46,7 @@ class userService extends UserModel {
 
     updateUser = async (id, user) => {
         try {
-            const updatedUser = await UserModel.findByIdAndUpdate(id, user);
+            const updatedUser = await userModel.findByIdAndUpdate(id, user);
             return updatedUser;
         } catch (error) {
             console.log("Error al actualizar usuario: ");
@@ -56,7 +56,7 @@ class userService extends UserModel {
 
     deleteUser = async (id) => {
         try {
-            const deletedUser = await UserModel.findByIdAndDelete(id);
+            const deletedUser = await userModel.findByIdAndDelete(id);
             return deletedUser;
         } catch (error) {
             console.log("Error al eliminar usuario: ");
@@ -66,7 +66,7 @@ class userService extends UserModel {
 
     validateUser = async (email, password) => {
         try {
-            const user = await UserModel.findOne({ email: email, password: password });
+            const user = await userModel.findOne({ email: email, password: password });
             return user;
         }
         catch (error) {
@@ -77,7 +77,7 @@ class userService extends UserModel {
 
     findUser = async (email) => {
         try {
-            const user = await UserModel.findOne({ email }, { email: 1, password: 1, role: 1, name: 1, surname: 1 });
+            const user = await userModel.findOne({ email }, { email: 1, password: 1, role: 1, name: 1, surname: 1 });
             if (!user) {
                 return "User not found";
             }
@@ -90,7 +90,7 @@ class userService extends UserModel {
 
     findEmail = async (param) => {
         try {
-            const user = await UserModel.findOne(param);
+            const user = await userModel.findOne(param);
             return user
         } catch (error) {
             console.error("Error finding email: ", error);
@@ -100,4 +100,4 @@ class userService extends UserModel {
 
 }
 
-export default userService;
+export default UserService;

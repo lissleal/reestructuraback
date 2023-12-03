@@ -1,3 +1,5 @@
+import CartService from '../services/CartService.js';
+const cartService = new CartService();
 export async function getCarts(req, res) {
     try {
         let carts = await cartModel.find();
@@ -63,7 +65,7 @@ export async function getProductsInCart(req, res) {
     const productId = req.params.pid;
 
     try {
-        const result = await carts.existProductInCart(cartId, productId);
+        const result = await cartService.existProductInCart(cartId, productId);
         res.send({ result: "success", payload: result })
     } catch (error) {
         console.error('Error al obtener el producto:', error);
@@ -77,7 +79,7 @@ export async function addProductInCart(req, res) {
     const productId = req.params.pid;
 
     try {
-        const result = await carts.addProductInCart(cartId, productId);
+        const result = await cartService.addProductInCart(cartId, productId);
         res.send({ result: "success", payload: result })
     } catch (error) {
         console.error('Error al agregar el producto:', error);
@@ -92,7 +94,7 @@ export async function updateQuantityOfProduct(req, res) {
     const newQuantity = req.body.quantity;
 
     try {
-        const result = await carts.updateQuantityOfProduct(cartId, productId, newQuantity);
+        const result = await cartService.updateQuantityOfProduct(cartId, productId, newQuantity);
         res.send({ result: "success", payload: result })
     } catch (error) {
         console.error('Error al actualizar el producto:', error);
@@ -106,7 +108,7 @@ export async function deleteProductInCart(req, res) {
     let productId = req.params.pid;
 
     try {
-        const result = await carts.deleteProductInCart(cartId, productId);
+        const result = await cartService.deleteProductInCart(cartId, productId);
         res.send({ result: "success", payload: result })
     } catch (error) {
         console.error('Error al eliminar el producto:', error);

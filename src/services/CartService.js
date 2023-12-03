@@ -1,5 +1,5 @@
-import cartModel from "../models/cart.model.js"
-import productModel from "../models/product.model.js"
+import cartModel from "../dao/mongo/cart.model.js"
+import productModel from "../dao/mongo/product.model.js"
 
 
 class CartService extends cartModel {

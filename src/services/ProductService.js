@@ -1,4 +1,4 @@
-import productModel from "../models/product.model.js";
+import productModel from "../dao/mongo/product.model.js";
 
 class ProductService extends productModel {
     constructor() {
@@ -102,55 +102,55 @@ class ProductService extends productModel {
         }
     }
 
-    getProductMaster = async (page, limit, category, availability, sortOrder) => {
-        try {
-            let filter = {}
-            const startIndex = (page - 1) * limit
-            const endIndex = page * limit
-            const sortOptions = {}
+    // getProductMaster = async (page, limit, category, availability, sortOrder) => {
+    //     try {
+    //         let filter = {}
+    //         const startIndex = (page - 1) * limit
+    //         const endIndex = page * limit
+    //         const sortOptions = {}
 
-            if (sortOrder === 'asc') {
-                sortOptions.price = 1
-            } else if (sortOrder === 'desc') {
-                sortOptions.price = -1
-            } else {
-                throw new Error('El parámetro sortOrder debe ser "asc" o "desc".')
-            }
-            if (category != "") {
-                filter.category = category;
-            }
-            if (availability != "") {
-                filter.availability = availability;
-            }
-            const query = ProductDao.find(filter)
-                .skip(startIndex)
-                .limit(limit)
-                .sort(sortOptions);;
-            const products = await query.exec();
+    //         if (sortOrder === 'asc') {
+    //             sortOptions.price = 1
+    //         } else if (sortOrder === 'desc') {
+    //             sortOptions.price = -1
+    //         } else {
+    //             throw new Error('El parámetro sortOrder debe ser "asc" o "desc".')
+    //         }
+    //         if (category != "") {
+    //             filter.category = category;
+    //         }
+    //         if (availability != "") {
+    //             filter.availability = availability;
+    //         }
+    //         const query = ProductDao.find(filter)
+    //             .skip(startIndex)
+    //             .limit(limit)
+    //             .sort(sortOptions);;
+    //         const products = await query.exec();
 
-            const totalProducts = await ProductDao.countDocuments(filter);
-            const totalPages = Math.ceil(totalProducts / limit);
-            const hasPrevPage = startIndex > 0;
-            const hasNextPage = endIndex < totalProducts;
-            const prevLink = hasPrevPage ? `/api/products?page=${page - 1}&limit=${limit}` : null;
-            const nextLink = hasNextPage ? `/api/products?page=${page + 1}&limit=${limit}` : null;
-            return {
-                status: 'success',
-                payload: products,
-                totalPages: totalPages,
-                prevPage: hasPrevPage ? page - 1 : null,
-                nextPage: hasNextPage ? page + 1 : null,
-                page: page,
-                hasPrevPage: hasPrevPage,
-                hasNextPage: hasNextPage,
-                prevLink: prevLink,
-                nextLink: nextLink,
-            };
-        } catch {
-            console.error('Error al obtener los productos:', error);
-            return { status: 'error', payload: 'Error al obtener los productos' };
-        }
-    }
+    //         const totalProducts = await ProductDao.countDocuments(filter);
+    //         const totalPages = Math.ceil(totalProducts / limit);
+    //         const hasPrevPage = startIndex > 0;
+    //         const hasNextPage = endIndex < totalProducts;
+    //         const prevLink = hasPrevPage ? `/api/products?page=${page - 1}&limit=${limit}` : null;
+    //         const nextLink = hasNextPage ? `/api/products?page=${page + 1}&limit=${limit}` : null;
+    //         return {
+    //             status: 'success',
+    //             payload: products,
+    //             totalPages: totalPages,
+    //             prevPage: hasPrevPage ? page - 1 : null,
+    //             nextPage: hasNextPage ? page + 1 : null,
+    //             page: page,
+    //             hasPrevPage: hasPrevPage,
+    //             hasNextPage: hasNextPage,
+    //             prevLink: prevLink,
+    //             nextLink: nextLink,
+    //         };
+    //     } catch {
+    //         console.error('Error al obtener los productos:', error);
+    //         return { status: 'error', payload: 'Error al obtener los productos' };
+    //     }
+    // }
 }
 
 export default ProductService

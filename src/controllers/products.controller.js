@@ -1,19 +1,45 @@
+import ProductService from '../services/ProductService.js';
+const productService = new ProductService();
 
-export async function getProductMaster(req, res) {
-    let sortOrder = req.query.sortOrder || "asc";
-    let page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 10
-    let category = req.query.category || "";
-    let availability = req.query.availability || "";
+export async function getProductsController(req, res) {
 
-    res.send(await products.getProductMaster(page, limit, category, availability, sortOrder))
+    try {
+        if (!req.session.email) {
+            res.redirect("/login")
+        }
+
+        let allProducts = await productService.getProducts();
+        allProducts = allProducts.map(product => product.toJSON())
+        const userData = {
+            name: req.session.name,
+            surname: req.session.surname,
+            email: req.session.email,
+            role: req.session.role
+        }
+
+        res.render("home", {
+            title: "Segunda Pre Entrega",
+            products: allProducts,
+            user: userData
+
+        })
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error al obtener los productos' });
+    }
 }
+
+
 
 export async function getProductById(req, res) {
     try {
         const prodId = req.params.pid;
-        const productDetails = await products.getProductById(prodId);
-        res.send({ product: productDetails });
+        const prod = await productService.getProductById(prodId);
+        const productDetail = prod.toObject();
+        res.render("prod", {
+            title: "Detalle de Producto",
+            product: productDetail
+        })
     } catch (error) {
         console.error('Error al obtener el producto:', error);
         res.status(500).json({ error: 'Error al obtener el producto 2' });
@@ -58,7 +84,7 @@ export async function getProductByLimit(req, res) {
     let limit = parseInt(req.params.limit)
     if (isNaN(limit) || limit <= 0) {
         limit = 10
-    } res.send(await products.getProductByLimit(limit))
+    } res.send(await getProductByLimit(limit))
 }
 
 export async function getProductByPage(req, res) {
@@ -67,11 +93,11 @@ export async function getProductByPage(req, res) {
         page = 1
     }
     const productsPerPage = 1
-    res.send(await products.getProductByPage(page, productsPerPage))
+    res.send(await getProductByPage(page, productsPerPage))
 }
 
 export async function getProductByQuery(req, res) {
     let query = req.params.query
-    res.send(await products.getProductByQuery(query))
+    res.send(await getProductByQuery(query))
 }
 
